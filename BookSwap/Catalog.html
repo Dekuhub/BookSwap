@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/main.css">
+    <link rel="stylesheet" href="./static/style.css">
+    <title>Главная</title>
+</head>
+<header>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="./img/Group 7 (3).png" alt="BookSwap">
+        </a>
+        <nav class="nav-links">
+            <a href="#" class="highlighted">Главная</a>
+            <span class="separator"></span>
+            <a href="./Catalog.html">Каталог</a>
+            <span class="separator"></span>
+            <a href="#">Контакты</a>
+        </nav>
+        <div class="nav-button">
+            <button class="btnbtnprimary" style="color: white;" id="loginButton" onclick="openLoginModal()">Войти</button>
+            <!-- Иконка личного кабинета -->
+            <div class="nav-prof">
+                <a href="./main.html">Профиль</a>
+            </div>
+        </div>
+    </div>
+    <!-- Модальное окно -->
+    <!-- Модальное окно для входа -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>
+                    <a href="#" onclick="openLoginModal()" style="text-decoration: none;">Вход</a> /
+                    <a href="#" onclick="openRegistrationModal()" style="text-decoration: none;">Регистрация</a>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <!-- <div class="social-icons">
+                    <a href="#" class="icon google"><img src="./img/google.png" alt="Google"></a>
+                    <a href="#" class="icon vk"><img src="./img/vk.png" alt="ВКонтакте"></a>
+                    <a href="#" class="icon mail"><img src="./img/gmail.png" alt="Mail.ru"></a>
+                </div> -->
+                <form id="loginForm" onsubmit="return handleLogin(event)">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="email" placeholder="Логин" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" id="password" placeholder="Пароль" required>
+                    </div>
+                    <div class="text-danger" id="emailError" style="display:none;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" form="loginForm">Продолжить</button>
+            </div>
+            <div class="modal-close">
+                <span class="close" onclick="closeLoginModal()">&times;</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для регистрации -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>
+                    <a href="#" onclick="openLoginModal()" style="text-decoration: none;">Вход</a> / 
+                    <a href="#" onclick="openRegistrationModal()" style="text-decoration: none;">Регистрация</a>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <form id="registrationForm" onsubmit="return handleRegistration(event)">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="regEmail" placeholder="Логин" required>
+                        <div class="text-danger" id="regEmailError" style="display:none;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="regPassword" placeholder="Пароль" required>
+                            <button type="button" class="password-control" id="togglePassword1" onclick="togglePassword('regPassword', 'togglePassword1')">
+                                <img src="./img/show.png" alt="Показать пароль" id="toggleIcon1" style="width: 20px; height: 20px;" />
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="regConfirmPassword" placeholder="Подтвердите пароль" required>
+                            <button type="button" class="password-control" id="togglePassword2" onclick="togglePassword('regConfirmPassword', 'togglePassword2')">
+                                <img src="./img/show.png" alt="Показать пароль" id="toggleIcon2" style="width: 20px; height: 20px;" />
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-danger" id="regPasswordError" style="display:none;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" form="registrationForm">Зарегистрироваться</button>
+            </div>
+            <div class="modal-close">
+                <span class="close" onclick="closeRegistrationModal()">&times;</span>
+            </div>
+        </div>
+    </div> 
+</header>
+
+<body>
+        <div class="categories-container">
+            <!-- Верхние квадраты -->
+            <div class="category top" style="--offset: 1;">
+                <div class="name">Учеба</div>
+                <a href="" class="squareCat"><img src="/img/123/image.png" alt="Учеба"></a>
+            </div>
+            <div class="category top" style="--offset: 0;">
+                <div class="name">Популярное</div>
+                <a href="" class="squareCat"><img src="/img/123/image (1).png" alt="Популярное"></a>
+            </div>
+            <div class="category top" style="--offset: 1;">
+                <div class="name">Документальные</div>
+                <a href="" class="squareCat"><img src="/img/123/image (2).png" alt="Документальные"></a>
+            </div>
+            <div class="category top" style="--offset: 0;">
+                <div class="name">Романтика</div>
+                <a href="" class="squareCat"><img src="/img/123/image (3).png" alt="Романтика"></a>
+            </div>
+            <div class="category top" style="--offset: 1;">
+                <div class="name">Детектив</div>
+                <a href="" class="squareCat"><img src="/img/123/image (4).png" alt="Детектив"></a>
+            </div>
+    
+            <!-- Нижние квадраты -->
+            <div class="category bottom" style="--offset: 0;">
+                <div class="name">Фантастика</div>
+                <a href="" class="squareCat"><img src="/img/123/image (6).png" alt="Фантастика"></a>
+            </div>
+            <div class="category bottom" style="--offset: 1;">
+                <div class="name">Исторические</div>
+                <a href="" class="squareCat"><img src="/img/123/image (5).png" alt="Исторические"></a>
+            </div>
+            <div class="category bottom" style="--offset: 0;">
+                <div class="name">Философия</div>
+                <a href="" class="squareCat"><img src="/img/123/image (9).png" alt="Философия"></a>
+            </div>
+            <div class="category bottom" style="--offset: 1;">
+                <div class="name">Автобиография</div>
+                <a href="" class="squareCat"><img src="/img/123/image (8).png" alt="Автобиография"></a>
+            </div>
+            <div class="category bottom" style="--offset: 0;">
+                <div class="name">Мистика</div>
+                <a href="" class="squareCat"><img src="/img/123/image (7).png" alt="Мистика"></a>
+            </div>
+        </div>
+
+</body>
+<script src="./static/main.js"></script>
+<script src="./static/catal.js"></script>
+</html>

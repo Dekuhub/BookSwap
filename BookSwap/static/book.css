@@ -1,0 +1,58 @@
+.content-block {
+    width: calc(100% - 80px); /* 100% минус отступы по 40px с каждой стороны */
+    margin: 20px auto; /* Отступ сверху/снизу 20px, по бокам auto */
+    height: 19.5vw;
+    padding: 1vb;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+}
+
+        
+.block-1 {
+background-color: rgba(30, 24, 22, 0.8);
+border: 1px solid rgba(255, 255, 255, 0.2);
+position: relative; /* Для позиционирования квадрата */
+}
+        
+.block-2 {
+    background-color: rgba(30, 24, 22, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+}
+        
+/* Стили для квадрата */
+.square {
+width: 15vw;
+height: 18vw;
+background-color: rgba(255, 255, 255, 0.1);
+border: 2px solid white;
+position: absolute;
+top: 20px;
+left: 20px;
+}
+/* Обновлённые стили для кнопки */
+.contact-button {
+    display: block;
+    width:18vw;
+    margin: 0 auto 20px;
+    padding: 15px 0;
+    background-color: transparent; /* Прозрачный фон */
+    color: white;
+    border: 2px solid white; /* Белая рамка */
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.contact-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Лёгкое затемнение при наведении */
+}
+.contact-button:hover {
+    border-color: orange; /* Оранжевая рамка при наведении */
+}

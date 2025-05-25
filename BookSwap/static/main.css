@@ -1,0 +1,495 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #1E1816;
+    background-image: url('../img/Component 1.png');
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    position: relative; /* Для позиционирования квадрата и textarea */
+}
+header {
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.container-fluid {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+.navbar-brand img {
+    height: 5vw; /* Настройте высоту логотипа по необходимости */
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 1.2vw;
+}
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    margin: 0 15px;
+    padding: 5px 10px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+.nav-links a.highlighted {
+    font-weight: bold;
+}
+.nav-links a:hover {
+    border-color: orange;
+}
+.separator {
+    height: 2vw;
+    width: 2px;
+    background-color: #ddd;
+    margin: 0 15px;
+}
+.nav-prof {
+    display: flex;
+    align-items: center;
+}
+.nav-prof a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 10px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+.nav-prof a:hover {
+    border-color: orange;
+}
+.square {
+    width: 15vw;
+    height: 18vw;
+    background-color: transparent;
+    border-radius: 5px; /* Закругленные углы */
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10vw; /* Отступ сверху */
+    left: 10vw; /* Отступ слева */
+    border: 2px solid white; /* Белая рамка сверху и снизу */
+}
+.custom-textarea {
+    width: 40vw; /* Ширина textarea */
+    height: 16.4vw; /* Высота textarea */
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10.1vw;
+    left: 30vw;
+    background-color: transparent; /* Прозрачный фон */
+    border: 2px solid white; /* Белая рамка сверху и снизу */
+    border-left: none; /* Убираем рамку слева */
+    border-right: none; /* Убираем рамку справа */
+    color: white; /* Белый текст */
+    padding: 10px; /* Отступы внутри textarea */
+    font-size: 16px; /* Размер шрифта */
+    resize: none; /* Запрещаем изменение размера */
+    outline: none; /* Убираем стандартный outline при фокусе */
+    overflow: auto; /* Включаем скролл при необходимости */
+    scrollbar-width: none; /* Скрываем скролл в Firefox */
+}
+/* Скрываем скролл в WebKit-браузерах (Chrome, Safari) */
+.custom-textarea::-webkit-scrollbar {
+    display: none; /* Скрываем скролл */
+}
+/* Стили для textarea при фокусе */
+.custom-textarea:focus {
+    border-left: none; /* Убираем рамку слева */
+    border-right: none; /* Убираем рамку справа */
+    border-top: 2px solid white; /* Оставляем верхнюю границу */
+    border-bottom: 2px solid white; /* Оставляем нижнюю границу */
+}
+.info-container {
+    position: absolute;
+    top: 30vw; /* Отступ сверху (под квадратом) */
+    left: 10vw; /* Отступ слева (такой же, как у квадрата) */
+    right: 10vw; /* Отступ справа */
+    color: white;
+    font-size: 1.2vw;
+    display: flex;
+    justify-content: space-between; /* Распределение элементов по ширине */
+    align-items: center;
+    border-bottom: 2px solid white; /* Нижняя граница */
+    padding: 1vw 0; /* Отступы сверху и снизу */
+}
+.info-container button {
+    background-color: transparent; /* Прозрачный фон */
+    color: white; /* Белый текст */
+    border: 2px solid white; /* Белая рамка */
+    padding: 0.5vw 1vw;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1vw;
+    transition: background-color 0.3s ease; /* Плавное изменение фона */
+    transform: translateX(-7vw); /* Сдвиг влево на 10px */
+}
+.info-container button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Легкое осветление при наведении */
+}
+/* Стили для нижнего блока с Telegram и кнопкой "Опубликовать" */
+.bottom-container {
+    position: fixed; /* Прибиваем блок к нижней части экрана */
+    bottom: 0; /* Прижимаем к низу */
+    left: 10vw; /* Отступ слева */
+    right: 10vw; /* Отступ справа */
+    color: white;
+    font-size: 1.2vw;
+    display: flex;
+    justify-content: space-between; /* Распределение элементов по ширине */
+    align-items: center;
+    border-top: 2px solid white; /* Верхняя граница */
+    padding: 1vw 0; /* Отступы сверху и снизу */
+}
+.bottom-container a {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bottom-container a:hover {
+    text-decoration: underline;
+}
+
+.bottom-container button {
+    background-color: transparent; /* Прозрачный фон */
+    color: white; /* Белый текст */
+    border: 2px solid white; /* Белая рамка */
+    padding: 0.5vw 1vw;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1vw;
+    transition: background-color 0.3s ease; /* Плавное изменение фона */
+}
+
+.bottom-container button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Легкое осветление при наведении */
+}
+/* Стили для модального окна */
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E1816; /* Основной цвет фона */
+    background-image: url('../img/Ellipse\ 11.png'); /* Путь к фотографии */
+    background-size: 30%; /* Размер фотографии */
+    background-position: right bottom; /* Позиция фотографии в правом нижнем углу */
+    background-repeat: no-repeat; /* Запрещаем повторение фона */
+    padding: 2.5vw;
+    border: 2px solid white;
+    border-radius: 5px;
+    z-index: 1000;
+    overflow: hidden; /* Чтобы фотография не выходила за границы */
+}
+
+/* Стили для инпута и кнопки в модальном окне */
+.modal input {
+    width: 100%;
+    padding: 0.5vw;
+    margin-bottom: 1vw;
+    font-size: 1vw;
+    background-color: rgba(30, 24, 22, 0.8); /* Полупрозрачный фон */
+    border-radius: 20px;
+    border: 2px solid orange;
+    color: white;
+    z-index: 7; /* Убедимся, что инпут выше фона */
+    position: relative; /* Для корректного отображения */
+}
+
+.modal button {
+    background-color: transparent;
+    color: white;
+    padding: 0.7vw 1vw;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1vw;
+    z-index: 7; /* Убедимся, что кнопка выше фона */
+}
+
+.modal button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.overlay {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+/* Стили для модального окна загрузки */
+#upload-modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1E1816;
+    padding: 2vw;
+    border: 2px solid white;
+    border-radius: 5px;
+    z-index: 1;
+
+    text-align: center;
+}
+
+/* Сетка для фотографий (теперь в одну строку) */
+.photo-grid {
+    display: flex; /* Используем flexbox */
+    gap: 1vw; /* Расстояние между квадратами */
+    margin-bottom: 2vw;
+    justify-content: center; /* Центрируем квадраты */
+}
+
+/* Квадрат для фотографии */
+.photo-square {
+    position: relative;
+    width: 15.3vw; /* Ширина квадрата */
+    height: 22vw; /* Высота квадрата */
+    background-color: #2E2E2E;
+    border: 2px solid white;
+    border-radius: 5px;
+    overflow: hidden;
+    flex-shrink: 0; /* Запрещаем сжатие квадратов */
+}
+
+/* Превью фотографии */
+.photo-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Кнопка добавления фотографии */
+.add-photo-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 3vw;
+    height: 3vw;
+    font-size: 2vw;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* Textarea для описания */
+#description-textarea {
+    width: 96.7%;
+    height: 10vw;
+    padding: 1vw;
+    margin-bottom: 2vw;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+    font-size: 1vw;
+    resize: none;
+}
+
+/* Кнопка "Загрузить" */
+#upload-button {
+    background-color: transparent;
+    color: white;
+    border: 2px solid orange;
+    padding: 0.5vw 1vw;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1vw;
+    transition: background-color 0.3s ease;
+}
+
+#upload-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+/* Стили для блока с добавленными фотографиями */
+.user-photos-container {
+    position: absolute;
+    top: 35vw; /* Отступ сверху (под info-container) */
+    left: 10vw; /* Отступ слева */
+    right: 10vw; /* Отступ справа */
+    color: white;
+    font-size: 1.2vw;
+    padding: 1vw 0;
+}
+
+/* Стили для контейнера слайдеров */
+.sliders-container {
+    position: absolute;
+    top: 35vw; /* Отступ сверху (под info-container) */
+    left: 10vw; /* Отступ слева */
+    right: 10vw; /* Отступ справа */
+    color: white;
+    font-size: 1.2vw;
+    padding: 1vw 0;
+    display: flex;
+    flex-wrap: wrap; /* Перенос на новую строку */
+    gap: 1vw; /* Расстояние между слайдерами */
+}
+
+/* Стили для слайдера */
+.slider {
+    width: calc(25% - 1vw); /* Ширина слайдера (4 слайдера в строке) */
+    height: 14vw; /* Высота слайдера */
+    position: relative;
+    overflow: hidden;
+    border: 2px solid white;
+    border-radius: 5px;
+    flex: 0 0 auto; /* Не растягивать и не сжимать */
+}
+
+/* Стили для элемента слайдера */
+.slider-item {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slider-item.active {
+    opacity: 1;
+}
+
+.slider-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slider-description {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(30, 24, 22, 0.8);
+    color: white;
+    padding: 0.5vw;
+    text-align: center;
+    font-size: 1vw;
+    opacity: 0; /* Скрываем описание по умолчанию */
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Показываем описание при наведении на слайдер */
+.slider:hover .slider-description {
+    opacity: 1;
+}
+
+        .squareCat img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Это ключевое свойство для заполнения */
+            display: block;
+            transition: transform 0.3s ease;
+            border-radius:10px ;
+        }
+
+.nav-prof {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            min-width: 102px;
+            z-index: 1;
+            padding: 5px 0;
+        }
+        
+        /* Стили для кнопки "Выйти" */
+        #logout-btn {
+            background-color: transparent;
+            border: 2px solid #FFA500; /* Оранжевая рамка */
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-prof:hover .dropdown-content {
+            display: block;
+        }
+        /* Основная ссылка "Профиль" */
+        .nav-prof > a {
+            display: inline-block;
+            padding: 10px 15px;
+        }
+        
+.genre-dropdown {
+    display: none;
+    position: absolute;
+    background-color: rgba(30, 24, 22, 0.95);
+    border: 2px solid white;
+    border-radius: 5px;
+    min-width: 200px;       /* Минимальная ширина для красоты */
+    max-width: 63.5vw;       /* Максимальная ширина, чтобы не растягивалось слишком */
+    padding: 10px;
+    z-index: 1000;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    /* Расположение жанров */
+    display: flex;
+    flex-wrap: wrap;        /* Перенос на следующую строку */
+    gap: 10px;              /* Отступы между жанрами */
+}
+
+.genre-toggle-btn {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;          /* Занимает всю ширину родителя */
+    text-align: left;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-sizing: border-box; /* Чтобы padding учитывался в ширине */
+}
+
+.genre-option {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    white-space: nowrap;
+    user-select: none;
+    border: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.genre-option:hover {
+    background-color: rgba(255, 165, 0, 0.2);
+    border-color: rgba(255, 165, 0, 0.5);
+}
+
+.genre-option input[type="checkbox"] {
+    margin-right: 6px;
+}
+#description-textarea {
+    margin-top: 15px;    /* Отступ сверху */
+}

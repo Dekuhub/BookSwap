@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./static/main.css">
+    <title>Профиль</title>
+</head>
+<body>
+    <header>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="./img/Group 7 (3).png" alt="BookSwap">
+            </a>
+            <nav class="nav-links">
+                <a href="#" class="highlighted">Главная</a>
+                <span class="separator"></span>
+                <a href="../Catalog.html">Каталог</a>
+                <span class="separator"></span>
+                <a href="#">Контакты</a>
+            </nav>
+            <div class="nav-prof">
+                <a href="./main.html">Профиль</a>
+                <div class="dropdown-content">
+                    <button id="logout-btn">Выйти</button>
+                </div>
+            </div>
+        </div>
+    </header>
+        <div class="Base">
+            <div class="Picture">
+                <div class="square">
+
+                </div>
+            </div>
+            <div>
+                <textarea id="info-textarea" class="custom-textarea" placeholder="Текущая информация" readonly></textarea>
+            </div>
+        </div>
+<!-- Блок с информацией -->
+<div class="info-container">
+    <div>Рейтинг продавца: </div>
+    <div>Name</div>
+    <button id="edit-button">Изменить</button>
+</div>
+
+<!-- Контейнер для слайдеров -->
+<div class="sliders-container" id="sliders-container" style="display: none;">
+    <!-- Сюда будут добавляться слайдеры -->
+</div>
+
+
+<!-- Модальное окно для загрузки фотографий и описания -->
+<div id="upload-modal" class="modal">
+    <h3 style="color: white">Добавьте фотографии и описание</h3>
+    
+    <!-- Блок с квадратами для фотографий -->
+    <div class="photo-grid">
+        <div class="photo-square">
+            <input type="file" class="photo-input" accept="image/*" style="display: none;">
+            <img class="photo-preview">
+            <button class="add-photo-btn">+</button>
+        </div>
+        <div class="photo-square">
+            <input type="file" class="photo-input" accept="image/*" style="display: none;">
+            <img class="photo-preview">
+            <button class="add-photo-btn">+</button>
+        </div>
+        <div class="photo-square">
+            <input type="file" class="photo-input" accept="image/*" style="display: none;">
+            <img class="photo-preview">
+            <button class="add-photo-btn">+</button>
+        </div>
+        <div class="photo-square">
+            <input type="file" class="photo-input" accept="image/*" style="display: none;">
+            <img class="photo-preview">
+            <button class="add-photo-btn">+</button>
+        </div>
+    </div>
+         
+    <div class="genre-selector">
+        <button id="genre-toggle" class="genre-toggle-btn">Выберите жанры ▼</button>
+        <div id="genre-dropdown" class="genre-dropdown">
+            <div class="genre-option"><input type="checkbox" id="genre1"> <label for="genre1">Учёба</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre2"> <label for="genre2">Популярное</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre3"> <label for="genre3">Документальные</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre4"> <label for="genre4">Романтика</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre5"> <label for="genre5">Детектив</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre6"> <label for="genre6">Фантастика</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre7"> <label for="genre7">Исторические</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre8"> <label for="genre8">Философия</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre9"> <label for="genre9">Автобиография</label></div>
+            <div class="genre-option"><input type="checkbox" id="genre10"> <label for="genre10">Мистика</label></div>
+        </div>
+    </div>
+
+    <!-- Добавляем инпут между жанрами и textarea -->
+    <div style="width: 25vw;">
+        <input type="text" id="book-author" placeholder="Введите автора" style="
+            width: 100%;
+            padding: 10px;
+            background-color: transparent;
+            border: 2px solid white;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            margin-top: 25px;
+        ">
+    </div>
+
+    <div style="width: 25vw;">
+        <input type="text" id="book-title" placeholder="Название книги" style="
+            width: 100%;
+            padding: 10px;
+            background-color: transparent;
+            border: 2px solid white;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            margin-top: 15px;
+        ">
+    </div>
+
+    <!-- Textarea для описания -->
+    <textarea id="description-textarea" placeholder="Введите описание..."></textarea>
+
+    <!-- Кнопка "Загрузить" -->
+    <button id="upload-button">Загрузить</button>
+</div>
+
+<!-- Затемнение фона -->
+<div id="overlay" class="overlay"></div>
+<footer>
+        <!-- Нижний блок с Telegram и кнопкой "Опубликовать" -->
+<div class="bottom-container">
+    <a id="telegram-link" href="#">Telegram</a>
+    <button id="publish-button">Опубликовать</button>
+
+<!-- Модальное окно для изменения Telegram -->
+<div id="modal" class="modal">
+    <h3 style="color: white">Введите свой ник Telegram</h3>
+    <input type="text" id="telegram-input" placeholder="...">
+    <button id="save-telegram">Сохранить</button>
+</div>
+</div>
+</footer>
+</body>
+<script src="./static/main.js"></script>
+</html>
