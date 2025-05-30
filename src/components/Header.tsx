@@ -19,12 +19,12 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
             <img 
               src="/images/Logo.png" 
               alt="BookSwap" 
-              className="h-10 w-auto object-contain"
+              className="h-16 w-auto object-contain"
             />
           </Link>
 
           {/* Навигация */}
-          <nav className="flex items-center space-x-8">
+          <nav className="flex items-center space-x-8 ml-8">
             <Link
               to="/main"
               className={`text-base transition-colors ${

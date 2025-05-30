@@ -7,10 +7,13 @@ interface User {
   id: number;
   login: string;
   username: string;
+  email?: string;
+  avatar?: string;
 }
 
 interface UserContextType {
   user: User | null;
+  setUser: (user: User | null) => void;
   login: (login: string, password: string) => Promise<void>;
   register: (username: string, login: string, password: string) => Promise<void>;
   logout: () => void;
@@ -48,40 +51,55 @@ async function fetchWithAuth(url: string, options: RequestInit = {}) {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Инициализируем состояние из localStorage при первой загрузке
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('user_id');
+    const userDataStr = localStorage.getItem('userData');
+    
+    if (token && userId && userDataStr) {
+      try {
+        const userData = JSON.parse(userDataStr);
+        return userData;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const initializeAuth = async () => {
+  const updateUserData = async () => {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('user_id');
 
       if (token && userId) {
         try {
-          // Проверяем валидность токена
-          const response = await fetchWithAuth(`${API_URL}/auth/validate`);
-          if (!response.ok) {
-            throw new Error('Token is invalid');
-          }
-          setUser({
-            id: Number(userId),
-            login: localStorage.getItem('login') || '',
-            username: localStorage.getItem('username') || ''
-          });
+        // Получаем актуальные данные пользователя
+        const response = await fetchWithAuth(`${API_URL}/users/${userId}`);
+        const userData = await response.json();
+        
+        // Обновляем данные в localStorage и состоянии
+        const userToSave = {
+          id: userData.id,
+          login: userData.login || userData.email,
+          username: userData.username,
+          email: userData.email,
+          avatar: userData.avatar
+        };
+        
+        localStorage.setItem('userData', JSON.stringify(userToSave));
+        setUser(userToSave);
         } catch (error) {
-          console.error('Failed to initialize auth:', error);
-          localStorage.removeItem('token');
-          localStorage.removeItem('user_id');
-          localStorage.removeItem('login');
-          localStorage.removeItem('username');
-          setUser(null);
+        console.error('Failed to fetch user data:', error);
+        // Если не удалось получить данные, но токен есть, оставляем текущего пользователя
         }
       }
-      
       setIsLoading(false);
     };
 
-    initializeAuth();
+  useEffect(() => {
+    updateUserData();
   }, []);
 
   const loginHandler = async (login: string, password: string) => {
@@ -96,14 +114,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data: TokenResponse = await response.json();
       localStorage.setItem('token', data.token);
       localStorage.setItem('user_id', String(data.user_id));
-      localStorage.setItem('login', login);
-      localStorage.setItem('username', login); // Используем login как username, если сервер не возвращает отдельно
 
-      setUser({
-        id: data.user_id,
-        login,
-        username: login
-      });
+      // После успешного входа получаем данные пользователя
+      await updateUserData();
     } catch (error) {
       console.error('Login error:', error);
       throw error instanceof Error ? error : new Error('Ошибка при попытке входа');
@@ -135,13 +148,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user_id');
-    localStorage.removeItem('login');
-    localStorage.removeItem('username');
+    localStorage.removeItem('userData');
   };
 
   return (
     <UserContext.Provider value={{ 
       user, 
+      setUser,
       login: loginHandler, 
       register: registerHandler, 
       logout, 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getUserById, getUserBooks } from '../../api/users';
+import { logout } from '../../api/auth';
 import type { User } from '../../types/user';
 import type { Book } from '../../types/book';
 import { DEFAULT_AVATAR } from '../../constants/images';
@@ -23,7 +24,8 @@ const StatBlock: React.FC<StatBlockProps> = ({ label, value }) => (
 
 const ProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { user: currentUser } = useUser();
+  const { user: currentUser, setUser: setCurrentUser } = useUser();
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,6 +65,20 @@ const ProfilePage: React.FC = () => {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setCurrentUser(null);
+      navigate('/');
+    } catch (error) {
+      console.error('Ошибка при выходе:', error);
+      setError(error instanceof Error ? error.message : 'Ошибка при выходе из системы');
+      // Даже если произошла ошибка на сервере, мы всё равно разлогиниваем пользователя локально
+      setCurrentUser(null);
+      navigate('/');
+    }
   };
 
   if (loading) {
@@ -133,6 +149,12 @@ const ProfilePage: React.FC = () => {
                       className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-[#FF6B00] text-white rounded-full hover:bg-[#E55D00] transition-colors text-sm sm:text-base"
                     >
                       Опубликовать книгу
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full sm:w-auto px-4 sm:px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors text-sm sm:text-base"
+                    >
+                      Выйти
                     </button>
                   </>
                 )}

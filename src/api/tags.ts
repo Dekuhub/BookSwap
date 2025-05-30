@@ -55,5 +55,7 @@ export const getTags = async (): Promise<Tag[]> => {
     throw new Error('Не удалось загрузить теги');
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log('API Response - Tags:', data);
+  return data;
 }; 

@@ -16,11 +16,14 @@ export interface Book {
   title: string;
   author: string;
   description: string;
-  state: BookState;
+  photos: Array<{
+    id: number;
+    photo_url: string;
+    is_main: boolean;
+  }>;
+  state_id: number;
   tags: Tag[];
-  photos: BookPhoto[];
-  coverUrl?: string;
-  thumbnailUrl?: string;
+  user_id: number;
 }
 
 export interface BookFormData {
@@ -35,4 +38,22 @@ export interface BookFormData {
 export interface BookPhotoData {
   photo_url: string;
   is_main: boolean;
+}
+
+export interface UpdateBookData {
+  title: string;
+  author: string;
+  description: string;
+  photos: string[];
+  state_id: number;
+  tag_ids: number[];
+}
+
+export interface CreateBookData {
+  title: string;
+  author: string;
+  description: string;
+  photos: string[];
+  state_id: number;
+  tag_ids: number[];
 } 

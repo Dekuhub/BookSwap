@@ -44,14 +44,14 @@ export const CatalogPage: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl text-white text-center mb-12 font-light">Каталог</h1>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
         {tags.map((tag, index) => (
           <CategoryCard
             key={tag.id}
             name={tag.name}
             image={tag.photo || '/images/category-placeholder.jpg'}
             offset={index % 2}
-            isTop={index < 4}
+            isTop={index < 5}
           />
         ))}
       </div>

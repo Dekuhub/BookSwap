@@ -5,6 +5,8 @@ import BookList from '../components/books/BookList';
 import AddBook from '../components/books/AddBook';
 import BookDetailsPage from '../pages/BookDetailsPage';
 import ProfilePage from '../components/user/ProfilePage';
+import TagListPage from '../pages/TagListPage';
+import CreateTag from '../components/tags/CreateTag';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -12,7 +14,6 @@ const AppRoutes: React.FC = () => {
       <Route path="/" element={<Navigate to="/main" replace />} />
       <Route path="/main" element={
         <>
-          <h1 className="text-4xl text-white text-center mb-12 font-light">Предложения</h1>
           <BookList />
         </>
       } />
@@ -21,6 +22,8 @@ const AppRoutes: React.FC = () => {
       <Route path="/books/add" element={<AddBook />} />
       <Route path="/books/:id" element={<BookDetailsPage />} />
       <Route path="/users/:id" element={<ProfilePage />} />
+      <Route path="/tags" element={<TagListPage />} />
+      <Route path="/tags/create" element={<CreateTag />} />
       <Route path="/contacts" element={
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-4xl text-white text-center mb-12 font-light">Контакты</h1>

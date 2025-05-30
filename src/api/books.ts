@@ -1,4 +1,4 @@
-import type { Book, BookFormData } from '../types/book';
+import type { Book, BookFormData, CreateBookData, UpdateBookData } from '../types/book';
 import { config } from '../config';
 
 const API_URL = config.API_URL;
@@ -56,7 +56,9 @@ export const getBook = async (id: number): Promise<Book> => {
       throw response;
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('API Response - Book:', data);
+    return data;
   } catch (error) {
     return handleApiError(error);
   }
@@ -89,50 +91,63 @@ export const createBook = async (bookData: BookFormData): Promise<Book> => {
   }
 };
 
-export const updateBook = async (id: number, bookData: BookFormData): Promise<Book> => {
-  try {
-    const token = getAuthToken();
-    if (!token) {
-      throw new Error('Not authenticated');
-    }
+export const updateBook = async (bookId: number, data: UpdateBookData): Promise<Book> => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    throw new Error('Требуется авторизация');
+  }
 
-    const response = await fetch(`${API_URL}/books/${id}`, {
+  try {
+    console.log('Updating book with data:', data);
+    const response = await fetch(`${API_URL}/books/${bookId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(bookData),
+      body: JSON.stringify(data)
     });
 
     if (!response.ok) {
-      throw response;
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || 'Не удалось обновить книгу');
     }
 
-    return response.json();
+    const updatedBook = await response.json();
+    console.log('Server response after update:', updatedBook);
+    return updatedBook;
   } catch (error) {
-    return handleApiError(error);
+    console.error('Error updating book:', error);
+    throw error instanceof Error ? error : new Error('Ошибка при обновлении книги');
   }
 };
 
-export const deleteBook = async (id: number): Promise<void> => {
-  try {
-    const token = getAuthToken();
-    if (!token) {
-      throw new Error('Not authenticated');
-    }
+export interface BookDependencies {
+  hasActiveExchanges: boolean;
+  hasExchangeRequests: boolean;
+  hasExchangeHistory: boolean;
+}
 
-    const response = await fetch(`${API_URL}/books/${id}`, {
-      method: 'DELETE',
+export const checkBookDependencies = async (bookId: number): Promise<BookDependencies> => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Требуется авторизация');
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/books/${bookId}/dependencies`, {
       headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+        'Authorization': `Bearer ${token}`
+      }
     });
 
     if (!response.ok) {
-      throw response;
+      throw new Error('Не удалось проверить зависимости книги');
     }
+
+    return await response.json();
   } catch (error) {
-    return handleApiError(error);
+    console.error('Error checking book dependencies:', error);
+    throw error instanceof Error ? error : new Error('Ошибка при проверке зависимостей книги');
   }
 }; 

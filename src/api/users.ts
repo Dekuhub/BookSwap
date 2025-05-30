@@ -60,18 +60,37 @@ export const getUserBooks = async (userId: number, page: number = 1, pageSize: n
 
 export const getUserById = async (userId: number): Promise<User> => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`${API_URL}/users/${userId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to fetch user');
+  if (!token) {
+    throw new Error('Требуется авторизация');
   }
 
-  const userData = await response.json();
-  return userData;
+  try {
+    const response = await fetch(`${API_URL}/users/${userId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.status === 401) {
+      throw new Error('Требуется авторизация');
+    }
+
+    if (!response.ok) {
+      const text = await response.text();
+      let errorMessage = 'Ошибка при получении данных пользователя';
+      try {
+        const errorData = JSON.parse(text);
+        errorMessage = errorData.error || errorData.detail || errorMessage;
+      } catch (e) {
+        console.error('Failed to parse error response:', text);
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw error;
+  }
 }; 

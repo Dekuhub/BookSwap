@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getBook } from '../../api/books';
+import { getTags } from '../../api/tags';
 import type { Book } from '../../types/book';
+import type { Tag } from '../../types/tag';
 import LazyImage from '../common/LazyImage';
+import EditBook from './EditBook';
+import { useUser } from '../../contexts/UserContext';
 
 interface BookDetailsProps {
   bookId: number;
@@ -9,33 +14,46 @@ interface BookDetailsProps {
 }
 
 const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
+  const navigate = useNavigate();
+  const { user } = useUser();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [showImageViewer, setShowImageViewer] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+
+  const isOwner = user?.id === book?.user_id;
+
+  const fetchBook = async () => {
+    if (!bookId || typeof bookId !== 'number') {
+      setError('Некорректный идентификатор книги');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const [bookData, tags] = await Promise.all([
+        getBook(bookId),
+        getTags()
+      ]);
+      console.log('Book data:', bookData);
+      console.log('Tags:', tags);
+      console.log('Book tags:', bookData.tags);
+      setBook(bookData);
+      setAvailableTags(tags);
+      setError(null);
+    } catch (err) {
+      console.error('Failed to fetch book:', err);
+      setError('Не удалось загрузить информацию о книге');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBook = async () => {
-      if (!bookId || typeof bookId !== 'number') {
-        setError('Некорректный идентификатор книги');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        const bookData = await getBook(bookId);
-        setBook(bookData);
-        setError(null);
-      } catch (err) {
-        console.error('Failed to fetch book:', err);
-        setError('Не удалось загрузить информацию о книге');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchBook();
   }, [bookId]);
 
@@ -58,6 +76,42 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
           >
             Закрыть
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (isEditMode && book) {
+    return (
+      <div className="fixed inset-0 bg-black/70 z-[1000] flex items-center justify-center overflow-y-auto">
+        <div className="bg-[#2D2D2D] rounded-lg w-[90%] max-w-4xl p-8 m-4 relative">
+          <button
+            onClick={() => setIsEditMode(false)}
+            className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors duration-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <EditBook
+            book={book}
+            onSuccess={() => {
+              setIsEditMode(false);
+              fetchBook();
+            }}
+            onCancel={() => setIsEditMode(false)}
+          />
         </div>
       </div>
     );
@@ -143,6 +197,16 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
                 ))}
               </div>
             )}
+            {isOwner && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setIsEditMode(true)}
+                  className="flex-1 px-4 py-2 bg-[#FF6B00] text-white rounded-full hover:bg-[#E55D00] transition-colors"
+                >
+                  Редактировать
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Информация о книге */}
@@ -160,21 +224,27 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
             <div className="space-y-2">
               <h3 className="text-lg font-medium text-white">Состояние</h3>
               <p className="text-[#999]">
-                {book.state.name === 'available' ? 'Доступна' : 'Недоступна'}
+                {book.state_id === 1 && 'Отличное'}
+                {book.state_id === 2 && 'Хорошее'}
+                {book.state_id === 3 && 'Удовлетворительное'}
               </p>
             </div>
 
             <div className="space-y-2">
               <h3 className="text-lg font-medium text-white">Теги</h3>
               <div className="flex flex-wrap gap-2">
-                {book.tags.map(tag => (
-                  <span
-                    key={tag.id}
-                    className="px-3 py-1 bg-[#3D3D3D] text-white rounded-full text-sm"
-                  >
-                    {tag.name}
-                  </span>
-                ))}
+                {(book.tags || []).length > 0 ? (
+                  book.tags.map(tag => (
+                    <span
+                      key={tag.id}
+                      className="px-3 py-1 bg-[#3D3D3D] text-white rounded-full text-sm"
+                    >
+                      {tag.name}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-[#999]">Нет тегов</span>
+                )}
               </div>
             </div>
           </div>
@@ -203,64 +273,11 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
               />
             </svg>
           </button>
-
-          <button
-            onClick={() => setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : book.photos.length - 1))}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-
-          <button
-            onClick={() => setSelectedImageIndex((prev) => (prev < book.photos.length - 1 ? prev + 1 : 0))}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-
-          <LazyImage
-            src={book.photos[selectedImageIndex].photo_url}
-            alt={`${book.title} ${selectedImageIndex + 1}`}
-            className="max-h-[90vh] max-w-[90vw]"
+          <img
+            src={selectedImageIndex === 0 ? mainPhoto : otherPhotos[selectedImageIndex - 1].photo_url}
+            alt={book.title}
+            className="max-h-[90vh] max-w-[90vw] object-contain"
           />
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {book.photos.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImageIndex(index)}
-                className={`w-2 h-2 rounded-full ${
-                  index === selectedImageIndex ? 'bg-[#FF6B00]' : 'bg-white/60'
-                }`}
-              />
-            ))}
-          </div>
         </div>
       )}
     </div>

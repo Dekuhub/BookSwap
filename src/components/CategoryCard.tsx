@@ -10,8 +10,8 @@ interface CategoryCardProps {
 export const CategoryCard = ({ name, image, offset, isTop }: CategoryCardProps) => {
   const offsetStyle = {
     top: isTop 
-      ? `calc(${offset} * 40px)` 
-      : `calc(${offset} * 2.5vw + 5vh)`
+      ? `calc(${offset} * 30px)`
+      : `calc(${offset} * 2vw + 4vh)`
   };
 
   // Используем дефолтное изображение, если указанное не найдено
@@ -21,15 +21,15 @@ export const CategoryCard = ({ name, image, offset, isTop }: CategoryCardProps) 
 
   return (
     <div 
-      className="flex flex-col items-center gap-[2vw] relative" 
+      className="flex flex-col items-center gap-4 relative" 
       style={offsetStyle}
     >
-      <div className="text-sm text-center text-white border-2 border-white px-[14px] py-[7px] rounded-md">
+      <div className="text-sm text-center text-white border-2 border-white px-3 py-1.5 rounded-md">
         {name}
       </div>
       <Link 
         to={`/books?tag=${encodeURIComponent(name)}`}
-        className="w-[15vw] h-[15vw] bg-transparent border-2 border-white rounded-lg overflow-hidden block transition-transform duration-300 hover:scale-105"
+        className="aspect-square w-full max-w-[200px] bg-transparent border-2 border-white rounded-lg overflow-hidden block transition-transform duration-300 hover:scale-105"
       >
         <img 
           src={image}
