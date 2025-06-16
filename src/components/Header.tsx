@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 
 interface HeaderProps {
@@ -8,7 +8,16 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useUser();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/books/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <header className="border-b border-[#2D2D2D] py-4">
@@ -59,13 +68,23 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick }) => {
 
           {/* Поиск */}
           <div className="flex-1 max-w-xl mx-8">
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Поиск..."
                 className="w-full bg-transparent border border-[#2D2D2D] rounded-full px-4 py-2 text-white placeholder-[#999999] focus:outline-none focus:border-[#FF6B00]"
               />
-            </div>
+              <button
+                type="submit"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#999999] hover:text-[#FF6B00]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+            </form>
           </div>
 
           {/* Отложенные и Профиль */}

@@ -122,6 +122,30 @@ export const updateBook = async (bookId: number, data: UpdateBookData): Promise<
   }
 };
 
+export const deleteBook = async (bookId: number): Promise<void> => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Требуется авторизация');
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/books/${bookId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || 'Не удалось удалить книгу');
+    }
+  } catch (error) {
+    console.error('Error deleting book:', error);
+    throw error instanceof Error ? error : new Error('Ошибка при удалении книги');
+  }
+};
+
 export interface BookDependencies {
   hasActiveExchanges: boolean;
   hasExchangeRequests: boolean;

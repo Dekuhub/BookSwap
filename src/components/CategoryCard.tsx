@@ -28,7 +28,7 @@ export const CategoryCard = ({ name, image, offset, isTop }: CategoryCardProps) 
         {name}
       </div>
       <Link 
-        to={`/books?tag=${encodeURIComponent(name)}`}
+        to={`/books/search?q=${encodeURIComponent(name)}`}
         className="aspect-square w-full max-w-[200px] bg-transparent border-2 border-white rounded-lg overflow-hidden block transition-transform duration-300 hover:scale-105"
       >
         <img 

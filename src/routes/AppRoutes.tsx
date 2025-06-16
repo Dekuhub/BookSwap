@@ -7,6 +7,7 @@ import BookDetailsPage from '../pages/BookDetailsPage';
 import ProfilePage from '../components/user/ProfilePage';
 import TagListPage from '../pages/TagListPage';
 import CreateTag from '../components/tags/CreateTag';
+import BookSearch from '../components/books/BookSearch';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const AppRoutes: React.FC = () => {
       } />
       <Route path="/catalog" element={<CatalogPage />} />
       <Route path="/books" element={<BookList />} />
+      <Route path="/books/search" element={<BookSearch />} />
       <Route path="/books/add" element={<AddBook />} />
       <Route path="/books/:id" element={<BookDetailsPage />} />
       <Route path="/users/:id" element={<ProfilePage />} />
