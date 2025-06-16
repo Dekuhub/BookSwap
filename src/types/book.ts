@@ -11,6 +11,19 @@ export interface BookPhoto {
   is_main: boolean;
 }
 
+export interface Comment {
+  id: number;
+  book_id: number;
+  text: string;
+  created_at: string;
+  user_id: number;
+  user: {
+    id: number;
+    username: string;
+    avatar?: string;
+  };
+}
+
 export interface Book {
   id: number;
   title: string;
@@ -24,6 +37,7 @@ export interface Book {
   state_id: number;
   tags: Tag[];
   user_id: number;
+  comments: Comment[];
 }
 
 export interface BookFormData {
