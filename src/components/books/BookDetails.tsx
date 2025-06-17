@@ -8,6 +8,8 @@ import LazyImage from '../common/LazyImage';
 import EditBook from './EditBook';
 import Comments from '../comments/Comments';
 import { useUser } from '../../contexts/UserContext';
+import { deleteBook } from '../../api/books';
+import { addToCart } from '../../api/cart';
 
 interface BookDetailsProps {
   bookId: number;
@@ -24,6 +26,8 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
   const [showImageViewer, setShowImageViewer] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [cartError, setCartError] = useState<string | null>(null);
 
   const isOwner = user?.id === book?.user_id;
 
@@ -57,6 +61,72 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
   useEffect(() => {
     fetchBook();
   }, [bookId]);
+
+  const handleAddToCart = async (type: 'buy' | 'exchange') => {
+    console.log('handleAddToCart called with type:', type);
+    console.log('Current book:', book);
+    console.log('Current user:', user);
+    
+    if (!book) {
+      console.log('No book data available');
+      return;
+    }
+    
+    if (!user) {
+      console.log('No user data available');
+      setCartError('Для добавления книги в отложенные необходимо войти в систему');
+      return;
+    }
+    
+    console.log('Adding to cart:', { bookId: book.id, type });
+    setIsAddingToCart(true);
+    setCartError(null);
+    
+    try {
+      const token = localStorage.getItem('token');
+      console.log('Token exists:', !!token);
+      console.log('Token value:', token);
+      
+      if (!token) {
+        throw new Error('Требуется авторизация');
+      }
+      
+      console.log('Calling addToCart API...');
+      const result = await addToCart(book.id, type);
+      console.log('Add to cart result:', result);
+      
+      setCartError(null);
+      alert('Книга добавлена в отложенные');
+      
+      const cartEvent = new CustomEvent('cartUpdated');
+      window.dispatchEvent(cartEvent);
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+      if (err instanceof Error) {
+        console.error('Error message:', err.message);
+        console.error('Error stack:', err.stack);
+        setCartError(err.message);
+      } else {
+        setCartError('Не удалось добавить книгу в отложенные');
+      }
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (book) {
+      if (window.confirm('Вы уверены, что хотите удалить эту книгу?')) {
+        try {
+          await deleteBook(book.id);
+          navigate('/profile');
+        } catch (error) {
+          console.error('Error deleting book:', error);
+          alert('Не удалось удалить книгу');
+        }
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -162,6 +232,34 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/20 hover:bg-black/40 transition-colors rounded-lg" />
+                {!isOwner && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Add to cart clicked');
+                      if (book) {
+                        handleAddToCart('buy');
+                      }
+                    }}
+                    disabled={isAddingToCart}
+                    className="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white hover:bg-[#FF6B00] transition-all duration-300"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                  </button>
+                )}
               </div>
               
               {otherPhotos.length > 0 && (
@@ -186,55 +284,47 @@ const BookDetails: React.FC<BookDetailsProps> = ({ bookId, onClose }) => {
                 </div>
               )}
 
+              {/* Кнопки действий для владельца */}
               {isOwner && (
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => setIsEditMode(true)}
-                    className="flex-1 px-4 py-2 bg-[#FF6B00] text-white rounded-full hover:bg-[#E55D00] transition-colors text-sm sm:text-base"
+                    className="flex-1 px-4 py-2 bg-[#FF6B00] text-white rounded-full hover:bg-[#E55D00]"
                   >
                     Редактировать
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="flex-1 px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+                  >
+                    Удалить
                   </button>
                 </div>
               )}
             </div>
 
             {/* Информация о книге */}
-            <div className="space-y-4 sm:space-y-6">
-              <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">{book.title}</h2>
-                <p className="text-lg sm:text-xl text-[#999]">{book.author}</p>
+            <div className="space-y-4">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">{book.title}</h1>
+              <p className="text-[#999]">{book.author}</p>
+              <p className="text-white">{book.description}</p>
+              
+              {/* Теги */}
+              <div className="flex flex-wrap gap-2 mt-4">
+                {book.tags.map(tag => (
+                  <span
+                    key={tag.id}
+                    className="px-3 py-1 bg-[#FF6B00]/10 text-[#FF6B00] rounded-full text-sm"
+                  >
+                    {tag.name}
+                  </span>
+                ))}
               </div>
 
-              <div className="space-y-2">
-                <h3 className="text-base sm:text-lg font-medium text-white">Описание</h3>
-                <p className="text-sm sm:text-base text-[#999] leading-relaxed">{book.description}</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-base sm:text-lg font-medium text-white">Состояние</h3>
-                <p className="text-sm sm:text-base text-[#999]">
-                  {book.state_id === 1 && 'Отличное'}
-                  {book.state_id === 2 && 'Хорошее'}
-                  {book.state_id === 3 && 'Удовлетворительное'}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-base sm:text-lg font-medium text-white">Теги</h3>
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                  {(book.tags || []).length > 0 ? (
-                    book.tags.map(tag => (
-                      <span
-                        key={tag.id}
-                        className="px-2 sm:px-3 py-1 bg-[#3D3D3D] text-white rounded-full text-xs sm:text-sm"
-                      >
-                        {tag.name}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-sm sm:text-base text-[#999]">Нет тегов</span>
-                  )}
-                </div>
+              {/* Информация о владельце */}
+              <div className="mt-6 pt-6 border-t border-[#404040]">
+                <p className="text-[#999]">Добавил: {book.user?.username || 'Неизвестно'}</p>
+                <p className="text-[#999]">Дата добавления: {new Date(book.created_at).toLocaleDateString()}</p>
               </div>
             </div>
           </div>

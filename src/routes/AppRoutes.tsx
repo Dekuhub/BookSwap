@@ -8,6 +8,8 @@ import ProfilePage from '../components/user/ProfilePage';
 import TagListPage from '../pages/TagListPage';
 import CreateTag from '../components/tags/CreateTag';
 import BookSearch from '../components/books/BookSearch';
+import CartPage from '../components/cart/CartPage';
+import FavoritesPage from '../components/favorites/FavoritesPage';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -26,6 +28,8 @@ const AppRoutes: React.FC = () => {
       <Route path="/users/:id" element={<ProfilePage />} />
       <Route path="/tags" element={<TagListPage />} />
       <Route path="/tags/create" element={<CreateTag />} />
+      <Route path="/cart" element={<CartPage />} />
+      <Route path="/favorites" element={<FavoritesPage />} />
       <Route path="/contacts" element={
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-4xl text-white text-center mb-12 font-light">Контакты</h1>

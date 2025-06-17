@@ -1,7 +1,7 @@
 // Global configuration variables
 export const config = {
     // API Configuration
-    API_URL: 'http://10.3.18.1:8000/api/v1',
+    API_URL: '/api/v1',
     
     // Application Configuration
     APP_NAME: 'BookSwap',
@@ -21,4 +21,6 @@ export const config = {
 } as const;
 
 // Type for the config object
-export type Config = typeof config; 
+export type Config = typeof config;
+
+export const API_URL = '/api/v1'; 
